@@ -131,6 +131,13 @@ function pickTopic() {
 /* 첫 한마디 도우미 — AI 생성 (실패 시 정적 문장으로 폴백) */
 let starterBusy = false;
 let lastOpeners = [];
+let starterLoadTimer = null;
+
+const LOADING_MSGS = [
+  "상황을 살펴보는 중",
+  "어울리는 한마디를 고르는 중",
+  "말을 다듬는 중"
+];
 
 function shuffle(arr) {
   const a = arr.slice();
@@ -146,7 +153,22 @@ function starterHint() {
 }
 
 function starterLoading() {
-  $("starterResult").innerHTML = '<p class="ai-hint">문장을 고르는 중…</p>';
+  let i = 0;
+  $("starterResult").innerHTML =
+    '<p class="ai-hint ai-loading">' +
+    `<span class="ai-loading-msg">${LOADING_MSGS[0]}</span>` +
+    '<span class="ai-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>';
+  clearInterval(starterLoadTimer);
+  starterLoadTimer = setInterval(() => {
+    i = (i + 1) % LOADING_MSGS.length;
+    const msgEl = document.querySelector(".ai-loading-msg");
+    if (msgEl) msgEl.textContent = LOADING_MSGS[i];
+  }, 1100);
+}
+
+function stopStarterLoading() {
+  clearInterval(starterLoadTimer);
+  starterLoadTimer = null;
 }
 
 function fallbackStarter() {
@@ -206,6 +228,7 @@ async function generateStarter() {
     renderStarter(fallbackStarter());
   } finally {
     clearTimeout(timer);
+    stopStarterLoading();
     starterBusy = false;
     $("starterBtn").disabled = false;
     $("starterAgain").disabled = false;
