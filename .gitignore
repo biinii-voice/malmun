@@ -1,0 +1,13 @@
+# dependencies / build tooling (미래 AI 함수 추가 대비)
+node_modules/
+.vercel/
+
+# 환경변수 (API 키 등 — 절대 커밋 금지)
+.env
+.env.local
+.env*.local
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log

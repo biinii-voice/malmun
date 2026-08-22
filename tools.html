@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="말문 도구 — 오늘의 용기 1cm, 대화 소재 자판기, 첫 한마디 도우미, 소셜 배터리, 작은 기록" />
+  <title>말문 도구 — 말문</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gaegu:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="site-head">
+    <div class="wrap">
+      <a href="index.html" class="brand"><span class="brand-mark" aria-hidden="true"></span>말문</a>
+      <nav class="head-nav">
+        <a href="index.html">← 홈</a>
+        <a href="story.html">프로젝트 이야기</a>
+        <a href="tools.html" class="on">말문 도구</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" style="padding-bottom:34px;">
+      <div class="wrap hero-inner">
+        <span class="eyebrow">💬 두 번째 문 · 말문 도구</span>
+        <h1>말문을 여는 데<br /><em>30초면 충분합니다.</em></h1>
+        <p class="lede">
+          완벽하게 말하려 하지 않아도 됩니다. 지금 필요한 작은 계기 하나만 골라보세요.
+          모든 기록은 이 브라우저 안에만 저장되고, 서버로 전송되지 않습니다.
+        </p>
+      </div>
+    </section>
+
+    <section style="padding-top:0;">
+      <div class="wrap">
+        <div class="grid">
+
+          <article class="card tool span-6 reveal">
+            <span class="tag">오늘의 용기 1cm</span>
+            <h3>오늘 딱 하나만 해볼까요?</h3>
+            <p class="desc">부담 없는 작은 행동부터. 인증도 경쟁도 없습니다.</p>
+            <div id="missionResult" class="result warm"></div>
+            <div class="level-row" id="missionLevel"></div>
+            <p class="level-label" id="missionLevelText"></p>
+            <div class="actions">
+              <button class="btn" id="completeMission">오늘 해볼게요 ✓</button>
+              <button class="btn ghost" id="nextMission">다른 미션</button>
+            </div>
+          </article>
+
+          <article class="card tool span-6 reveal">
+            <span class="tag">대화 소재 자판기</span>
+            <h3>무슨 말을 해야 할지 모르겠다면</h3>
+            <p class="desc">버튼 하나로 가볍게 시작할 수 있는 대화 소재를 뽑아드립니다.</p>
+            <label for="topicCategory">대화 분위기</label>
+            <select id="topicCategory">
+              <option value="light">가벼운 질문</option>
+              <option value="taste">취향</option>
+              <option value="balance">밸런스 게임</option>
+              <option value="work">학교 · 회사 · 교육</option>
+              <option value="deep">조금 더 친해지고 싶을 때</option>
+            </select>
+            <div id="topicResult" class="result" style="margin-top:14px;"></div>
+            <div class="actions">
+              <button class="btn" id="pickTopic">🎲 하나 뽑기</button>
+            </div>
+          </article>
+
+          <article class="card tool span-6 reveal">
+            <span class="tag">첫 한마디 도우미</span>
+            <h3>상황별로 이렇게 시작해보세요</h3>
+            <p class="desc">완벽한 멘트보다, 자연스럽게 시작할 수 있는 한 문장이 더 중요합니다.</p>
+            <label for="situation">지금 어떤 상황인가요?</label>
+            <select id="situation">
+              <option value="training">신입교육 · 처음 만난 동기</option>
+              <option value="lunch">점심시간</option>
+              <option value="break">쉬는시간</option>
+              <option value="firstday">첫 출근 · 새 학기</option>
+              <option value="network">모임 · 네트워킹</option>
+            </select>
+            <div id="starterResult" class="result" style="margin-top:14px;"></div>
+            <div class="actions">
+              <button class="btn" id="starterBtn">첫 한마디 추천</button>
+              <button class="btn ghost" id="starterAgain">다른 표현</button>
+            </div>
+          </article>
+
+          <article class="card tool span-6 reveal">
+            <span class="tag">소셜 배터리</span>
+            <h3>오늘 내 배터리는 몇 %?</h3>
+            <p class="desc">컨디션이 낮은 날엔 무리하지 않아도 됩니다. 인사 한 번이면 충분할 수도 있어요.</p>
+            <div class="checkin">
+              <button class="mood" data-energy="100"><span class="emoji">😆</span><small>가득</small></button>
+              <button class="mood" data-energy="80"><span class="emoji">🙂</span><small>괜찮음</small></button>
+              <button class="mood" data-energy="60"><span class="emoji">😐</span><small>보통</small></button>
+              <button class="mood" data-energy="35"><span class="emoji">😵</span><small>방전</small></button>
+              <button class="mood" data-energy="15"><span class="emoji">🫠</span><small>집으로</small></button>
+            </div>
+            <div class="bar"><div id="energyBar"></div></div>
+            <p id="energyText" class="note">오늘의 상태를 눌러보세요.</p>
+          </article>
+
+          <article class="card tool span-12 reveal">
+            <span class="tag">작은 성장 기록</span>
+            <h3>사람과 연결된 순간을 남겨보세요</h3>
+            <p class="desc">
+              “먼저 인사했다”, “이름을 불러봤다” 같은 아주 작은 변화면 충분합니다.<br />
+              기록은 서버로 보내지 않고 지금 쓰는 브라우저에만 저장됩니다.
+            </p>
+            <label for="reflection">오늘 어떤 작은 일이 있었나요?</label>
+            <textarea id="reflection" maxlength="160" placeholder="예: 평소 말 못 해본 팀원에게 먼저 점심 메뉴를 물어봤다."></textarea>
+            <div class="actions">
+              <button class="btn" id="saveReflection">기록 남기기</button>
+              <button class="btn ghost" id="clearHistory">내 기록 지우기</button>
+            </div>
+            <div id="history" class="history"></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <section style="padding-top:0;">
+      <div class="wrap">
+        <div class="next-door reveal">
+          <div>
+            <h2>이 도구들이 왜 이렇게 생겼는지 궁금하다면</h2>
+            <p>첫 번째 문에 말문의 문제의식과 운영 원칙을 적어두었습니다.</p>
+          </div>
+          <a href="story.html" class="btn ghost">프로젝트 이야기 읽기 →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <strong>말문</strong> · 첫 한마디가 어려운 사람을 위한 무료 커뮤니케이션 지원 프로젝트
+      <div class="foot-tags">
+        <span>무료</span><span>광고 없음</span><span>로그인 없음</span>
+        <span>최소 개인정보</span><span>GitHub Pages 기반</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="malmun.js"></script>
+  <script src="tools.js"></script>
+</body>
+</html>
