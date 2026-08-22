@@ -128,8 +128,109 @@ function pickTopic() {
   $("topicResult").textContent = random(topics[$("topicCategory").value]);
 }
 
-function showStarter() {
-  $("starterResult").textContent = random(starters[$("situation").value]);
+/* 첫 한마디 도우미 — AI 생성 (실패 시 정적 문장으로 폴백) */
+let starterBusy = false;
+let lastOpeners = [];
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function starterHint() {
+  $("starterResult").innerHTML = '<p class="ai-hint">상황을 고르고 버튼을 눌러보세요.</p>';
+}
+
+function starterLoading() {
+  $("starterResult").innerHTML = '<p class="ai-hint">문장을 고르는 중…</p>';
+}
+
+function fallbackStarter() {
+  const picks = shuffle(starters[$("situation").value] || []).slice(0, 3);
+  return {
+    openers: picks,
+    followUp: "상대가 답하면 “아 그래요? 그건 어때요?”처럼 되물어보면 자연스러워요.",
+    avoid: "처음부터 너무 사적인 질문(나이·연애 등)은 부담이 될 수 있어요."
+  };
+}
+
+function renderStarter(data) {
+  lastOpeners = (data.openers || []).slice(0, 3);
+  let html = '<div class="ai-block"><div class="ai-block-title">💬 이렇게 시작해 보세요</div>';
+  html += lastOpeners.map((o, i) =>
+    `<div class="ai-opener"><span>${escapeHtml(o)}</span>` +
+    `<button type="button" class="ai-copy" data-i="${i}">복사</button></div>`
+  ).join("");
+  html += "</div>";
+  if (data.followUp) {
+    html += `<div class="ai-block"><div class="ai-block-title">🔁 이어서 물어보면 좋아요</div>` +
+      `<p class="ai-line">${escapeHtml(data.followUp)}</p></div>`;
+  }
+  if (data.avoid) {
+    html += `<div class="ai-block"><div class="ai-block-title">🌿 이건 살짝 조심</div>` +
+      `<p class="ai-line">${escapeHtml(data.avoid)}</p></div>`;
+  }
+  $("starterResult").innerHTML = html;
+}
+
+async function generateStarter() {
+  if (starterBusy) return;
+  starterBusy = true;
+  $("starterBtn").disabled = true;
+  $("starterAgain").disabled = true;
+  starterLoading();
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+  try {
+    const resp = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        situation: $("situation").value,
+        context: $("starterContext").value
+      }),
+      signal: controller.signal
+    });
+    const data = await resp.json();
+    if (resp.ok && data && !data.error && Array.isArray(data.openers) && data.openers.length) {
+      renderStarter(data);
+    } else {
+      renderStarter(fallbackStarter());
+    }
+  } catch (e) {
+    renderStarter(fallbackStarter());
+  } finally {
+    clearTimeout(timer);
+    starterBusy = false;
+    $("starterBtn").disabled = false;
+    $("starterAgain").disabled = false;
+  }
+}
+
+function copyText(text, btn) {
+  const done = () => {
+    const prev = btn.textContent;
+    btn.textContent = "복사됐어요";
+    setTimeout(() => { btn.textContent = prev; }, 1200);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(done);
+  } else {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) { /* 복사 미지원 브라우저 */ }
+    document.body.removeChild(ta);
+    done();
+  }
 }
 
 /* ---------- 작은 성장 기록 ---------- */
@@ -165,9 +266,15 @@ $("completeMission").addEventListener("click", () => {
 
 $("pickTopic").addEventListener("click", pickTopic);
 $("topicCategory").addEventListener("change", pickTopic);
-$("starterBtn").addEventListener("click", showStarter);
-$("starterAgain").addEventListener("click", showStarter);
-$("situation").addEventListener("change", showStarter);
+$("starterBtn").addEventListener("click", generateStarter);
+$("starterAgain").addEventListener("click", generateStarter);
+$("situation").addEventListener("change", starterHint);
+$("starterResult").addEventListener("click", (e) => {
+  const btn = e.target.closest && e.target.closest(".ai-copy");
+  if (!btn) return;
+  const text = lastOpeners[Number(btn.getAttribute("data-i"))];
+  if (text != null) copyText(text, btn);
+});
 
 const energyMessages = {
   100: "에너지 가득 😆 오늘은 먼저 한마디 걸어봐도 좋겠어요.",
@@ -210,7 +317,7 @@ $("clearHistory").addEventListener("click", () => {
 /* ---------- 초기화 ---------- */
 initMission();
 pickTopic();
-showStarter();
+starterHint();
 renderHistory();
 
 const savedEnergy = localStorage.getItem("malmun-energy");

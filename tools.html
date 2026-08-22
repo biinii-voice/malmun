@@ -75,7 +75,7 @@
           <article class="card tool span-6 reveal">
             <span class="tag">첫 한마디 도우미</span>
             <h3>상황별로 이렇게 시작해보세요</h3>
-            <p class="desc">완벽한 멘트보다, 자연스럽게 시작할 수 있는 한 문장이 더 중요합니다.</p>
+            <p class="desc">완벽한 멘트보다, 자연스럽게 시작할 수 있는 한 문장이 더 중요합니다. AI가 상황에 맞춰 제안해드려요.</p>
             <label for="situation">지금 어떤 상황인가요?</label>
             <select id="situation">
               <option value="training">신입교육 · 처음 만난 동기</option>
@@ -84,7 +84,10 @@
               <option value="firstday">첫 출근 · 새 학기</option>
               <option value="network">모임 · 네트워킹</option>
             </select>
-            <div id="starterResult" class="result" style="margin-top:14px;"></div>
+            <label for="starterContext">상황을 조금 더 알려주면 정확해져요 (선택)</label>
+            <input id="starterContext" type="text" maxlength="100" placeholder="예: 옆자리 신입인데 아직 서먹해요" autocomplete="off" />
+            <div id="starterResult" class="ai-result" style="margin-top:14px;"></div>
+            <p class="ai-privacy">입력한 내용은 추천에만 쓰이고 저장되지 않아요.</p>
             <div class="actions">
               <button class="btn" id="starterBtn">첫 한마디 추천</button>
               <button class="btn ghost" id="starterAgain">다른 표현</button>

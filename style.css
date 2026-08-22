@@ -289,6 +289,37 @@ section { padding: 72px 0; }
 }
 .result.warm { background: var(--sun-soft); border-color: #f0e2bd; color: #6f5311; }
 
+/* ---------- 첫 한마디 도우미 (AI 결과) ---------- */
+.ai-result { display: grid; gap: 12px; }
+.ai-hint {
+  margin: 0; min-height: 100px; display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 22px; color: var(--ink-soft);
+  background: var(--paper-2); border: 1px solid var(--line);
+  border-radius: 20px 20px 20px 6px; font-size: 14.5px;
+}
+.ai-block {
+  background: var(--paper-2); border: 1px solid var(--line);
+  border-radius: 16px; padding: 14px 16px;
+}
+.ai-block-title {
+  font-size: 12.5px; font-weight: 800; color: var(--sky);
+  margin-bottom: 10px; letter-spacing: -.01em;
+}
+.ai-opener {
+  display: flex; align-items: flex-start; gap: 10px; justify-content: space-between;
+  padding: 8px 0; border-top: 1px solid var(--line);
+}
+.ai-opener:first-of-type { border-top: 0; padding-top: 0; }
+.ai-opener span { font-size: 15px; line-height: 1.5; color: var(--ink); }
+.ai-copy {
+  flex: none; border: 1px solid var(--line); background: #fff;
+  color: var(--ink-soft); font-size: 12px; font-weight: 700;
+  padding: 5px 11px; border-radius: 999px; transition: background .18s, color .18s;
+}
+.ai-copy:hover { background: var(--sky-soft); color: var(--sky); }
+.ai-line { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink); }
+.ai-privacy { margin: 8px 2px 0; font-size: 12px; color: var(--ink-soft); }
+
 .actions { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 15px; }
 .btn {
   border: 1px solid transparent; border-radius: 14px;
@@ -303,11 +334,11 @@ section { padding: 72px 0; }
 .btn.sun:hover { background: #e4a72f; }
 
 label { display: block; margin: 14px 0 7px; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
-select, textarea {
+select, textarea, input[type="text"] {
   width: 100%; background: #fff; border: 1px solid var(--line);
   border-radius: 14px; padding: 12px 14px; outline: none;
 }
-select:focus, textarea:focus { border-color: var(--moss); box-shadow: 0 0 0 4px var(--moss-soft); }
+select:focus, textarea:focus, input[type="text"]:focus { border-color: var(--moss); box-shadow: 0 0 0 4px var(--moss-soft); }
 textarea { min-height: 92px; resize: vertical; }
 
 .level-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 14px; }
