@@ -307,14 +307,58 @@ const energyMessages = {
   15: "집에 가고 싶은 날 🫠 나를 챙기는 것도 중요한 용기예요."
 };
 
+/* 소셜 배터리 — AI 한마디 (실패 시 정적 메시지로 폴백) */
+let batteryBusy = false;
+
+function renderBattery(data) {
+  const voice = data.voice || "";
+  const tip = data.tip || "";
+  $("energyText").innerHTML =
+    (voice ? `<span class="batt-voice">${escapeHtml(voice)}</span>` : "") +
+    (tip ? `<span class="batt-tip">${escapeHtml(tip)}</span>` : "");
+}
+
+function batteryFallback(energy) {
+  return { voice: energyMessages[energy] || "오늘도 여기까지 온 것만으로 충분해요.", tip: "" };
+}
+
+async function generateBattery(energy) {
+  if (batteryBusy) return;
+  batteryBusy = true;
+  $("energyText").innerHTML =
+    '배터리 읽는 중 <span class="ai-dots" aria-hidden="true"><i></i><i></i><i></i></span>';
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+  try {
+    const resp = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ mode: "battery", energy: energy }),
+      signal: controller.signal
+    });
+    const data = await resp.json();
+    if (resp.ok && data && !data.error && (data.voice || data.tip)) {
+      renderBattery(data);
+    } else {
+      renderBattery(batteryFallback(energy));
+    }
+  } catch (e) {
+    renderBattery(batteryFallback(energy));
+  } finally {
+    clearTimeout(timer);
+    batteryBusy = false;
+  }
+}
+
 document.querySelectorAll(".mood").forEach((btn) => {
   btn.addEventListener("click", () => {
     const energy = Number(btn.dataset.energy);
     document.querySelectorAll(".mood").forEach((b) => b.classList.remove("on"));
     btn.classList.add("on");
     $("energyBar").style.width = energy + "%";
-    $("energyText").textContent = energyMessages[energy];
     localStorage.setItem("malmun-energy", String(energy));
+    generateBattery(energy);
   });
 });
 

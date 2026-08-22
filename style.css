@@ -377,6 +377,8 @@ textarea { min-height: 92px; resize: vertical; }
   margin-top: 12px; padding: 12px 14px; border-radius: 14px;
   background: var(--sun-soft); color: #7a5a12; font-size: 13.5px;
 }
+.batt-voice { display: block; font-weight: 700; line-height: 1.5; }
+.batt-tip { display: block; margin-top: 6px; font-size: 12.5px; opacity: .85; line-height: 1.5; }
 
 .history { display: grid; gap: 8px; margin-top: 16px; }
 .history-item {
